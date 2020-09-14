@@ -240,7 +240,7 @@ extension: CP  "-C"
 
 compile: "Ofront+ -88 -s -e"
 
-# ---- Link comand
+# ---- Link command
 # Always include OFRONTLIB for SYSTEM.oh
 
 link: "gcc -Os -g"

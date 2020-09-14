@@ -13,7 +13,7 @@ A collection of Oberon-2 modules and tools for Ofront compilers.
 2. Set the variable `TARGET` to your build target (eg. macOS)
 3. In the top directory: `make`
 
-This should run a bootstrip script to build `OMake`, which is then used to build other targets: `OEF`, and `TestAll`. 
+This should run a bootstrap script to build `OMake`, which is then used to build other targets: `OEF`, and `TestAll`. 
 
 Configuration for `OMake` is in `omake.ini`. This might need to be adjusted if special C compiler options are required.
 
@@ -81,7 +81,7 @@ Object base type supports:
 
     F.Out3("{} plus {} equals {}\n", V.int(x), V.int(y), V.int(x+y));
 
-Use `OutN` to print a formatted string with N paramters. The corresponding `FormatN` functions return a formatted `arValue.String`. For example:
+Use `OutN` to print a formatted string with N parameters. The corresponding `FormatN` functions return a formatted `arValue.String`. For example:
 
     text := F.Format2("Moved to position ({}, {})", V.real(x), V.real(y));
 
