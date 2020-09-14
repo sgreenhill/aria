@@ -7,7 +7,7 @@ A collection of Oberon-2 modules and tools for Ofront compilers.
 * `OEF` - Ofront Error Filter. This small program takes error messages output by the compiler and converts to a human-readable format.
 * `OMake` - [Oberon Make tool](doc/OMake.md). **OMake** is a tool for automating the process of building large Oberon-2 projects. **OMake** uses only the dependency information already expressed in the Oberon-2 source, and requires no additional scripts in order to compile and link projects.
 
-###Installation###
+### Installation
 
 1. Set the variable `OFRONT` to point to your OfrontPlus installation
 2. Set the variable `TARGET` to your build target (eg. macOS)

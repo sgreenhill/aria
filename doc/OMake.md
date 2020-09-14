@@ -16,17 +16,17 @@ OMake Module
 
 Various options are available to specify compiler options and link dependencies.
 
-##Command-line Options
+## Command-line Options
 
 Basic usage is:
 
-        OMake [ options ] { Module }
+    OMake [ options ] { Module }
 
 to automatically locate and process the source for `Module`. Here `Module` is the module name, and the location and extension of the source file will be inferred from the project settings.
 
 Alternatively:
 
-        OMake [ options ] { path/to/Module.ob2 }
+    OMake [ options ] { path/to/Module.ob2 }
 
 to process a specific source file.
 
@@ -40,82 +40,82 @@ to process a specific source file.
 
     By default **OMake** will call the compiler and linker to complete the build process. Specifying `-script` causes only the build commands to be output. Such scripts can be used to later build modules without the **OMake** command, for example to bootstrap **OMake** on a system for the first time.
 
-##Configuration Options
+## Configuration Options
 
 **OMake** can be configured on the command-line, or via configuration files.
 
 On the command line, an option is specified with a hyphen in front of the option name, and any additional parameters for that option are given in the following arguments. For example:
 
-        -script
-        -read omake.ini
-        -link "gcc -g"
-        -set TARGET macOS
+    -script
+    -read omake.ini
+    -link "gcc -g"
+    -set TARGET macOS
 
 Note that arguments that include spaces are enclosed within quotes, as required by the shell.
 
 In configuration files, each option is specified on a separate line beginning with the option name followed by a colon. Any parameters to the option are separated by whitespace, and parameters that include space must be quoted. The following correspond to the above examples:
 
-          script:
-          read: omake.ini
-          link: "gcc -g"
-          set: TARGET macOS
+    script:
+    read: omake.ini
+    link: "gcc -g"
+    set: TARGET macOS
 
 ### Compiler and linker commands
 
 The basic compile command is defined by the `compile` option. Example:
 
-        compile: "Ofront+ -88 -s -e"
-        
+    compile: "Ofront+ -88 -s -e"
+    
 The compile command should only specify flags that are common to all modules in the project. Additional flags may be appended based on file type.
 
 Similarly, the link command is defined by the `link` option:
 
-        link: "gcc -Os -g"
+    link: "gcc -Os -g"
 
 ### File types and paths
 
 The set of valid module extensions is defined using `extension` options. Each extension is associated with a set of compiler flags, which will be applied when compiling modules of that type. This is typically used to set the language model. **Ofront+** currently supports Oberon (`-1`), Oberon-2 (`-2`), Oberon-07 (`-7`), Component Pascal (`-C`), and an experimental dialect Oberon-3 (`-3`). The following associates different file extensions with each dialect:
 
-        extension: Mod "-2"
-        extension: ob  "-1"
-        extension: ob2 "-2"
-        extension: ob3 "-3"
-        extension: ob7 "-7"
-        extension: cp  "-C"
+    extension: Mod "-2"
+    extension: ob  "-1"
+    extension: ob2 "-2"
+    extension: ob3 "-3"
+    extension: ob7 "-7"
+    extension: cp  "-C"
 
 **OMake** needs to know where to find the source code for each imported module. This is specified with the `source` option, which defines a comma-separated list of directories. In order to locate a module, **OMake** searches each directory in turn, trying each valid extension until it finds a match.
 
-        source: .,test,src/lib,src/aria,[OFRONTLIB]
+    source: .,test,src/lib,src/aria,[OFRONTLIB]
 
 Certain built-in modules have no dependencies, and may sometimes have no associated source files. These can be excluded from module search using the `exclude` option:
 
-        exclude: Platform,SYSTEM
+    exclude: Platform,SYSTEM
 
 ### Settings and Environment
 
 **OMake** uses the `set` option to define parameters which can be substituted elsewhere in other configuration options. This is useful to avoid repeating common settings such as directory paths. The following defines two settings: `OFRONT` for the location of the compiler installation, and `TARGET` for the target type. Two other settings (`OFRONTLIB` and `TARGETLIB`) are derived by substitution.
 
-        set: OFRONT /usr/local/src/OfrontPlus
-        set: TARGET macOS
-        set: OFRONTLIB {OFRONT}/Mod/Lib
-        set: TARGETLIB {OFRONT}/Target/{TARGET}/Lib
-        
+    set: OFRONT /usr/local/src/OfrontPlus
+    set: TARGET macOS
+    set: OFRONTLIB {OFRONT}/Mod/Lib
+    set: TARGETLIB {OFRONT}/Target/{TARGET}/Lib
+    
 Each setting defines the name of a variable (eg. `OFRONT`) followed by its value (eg. `/usr/local/src/OfrontPlus`). This value can be substituted anywhere else in the configuration file by enclosing the variable name in curly braces (eg. `{OFRONT}`). This will be replaced by the value assigned to the original variable. For example, in the definition of `OFRONTLIB`, the value `{OFRONT}` is replaced by `/usr/local/src/OfrontPlus`, resulting in the value `/usr/local/src/OfrontPlus/Mod/Lib`.
 
 In order to avoid hard-coded paths, it is possible to use environment variables, which effectively defers evaluation of the value to the time that the compile and link commands are executed. For example, in the shell:
 
-        export OFRONT=/usr/local/src/OfrontPlus
-        export TARGET=macOS
+    export OFRONT=/usr/local/src/OfrontPlus
+    export TARGET=macOS
 
 Then in the configuration file, include:
 
-        set: OFRONT $OFRONT
-        set: TARGET $TARGET
+    set: OFRONT $OFRONT
+    set: TARGET $TARGET
 
 This has the same effect as the previous example, but allows the variables `OFRONT` and `TARGET` to be controlled by the user's environment, making the configuration file independent of system paths. Occasionally, we need to evaluate an absolute path which may contain such environment variables. For example, when specifying a source path to **OMake**. In this situation, we use square brackets instead of curly braces:
 
-        {OFRONTLIB} = $OFRONT/Mod/Lib
-        [OFRONTLIB] = /usr/local/src/OfrontPlus/Mod/Lib
+    {OFRONTLIB} = $OFRONT/Mod/Lib
+    [OFRONTLIB] = /usr/local/src/OfrontPlus/Mod/Lib
 
 Curly braces substitute the literal value; Square brackets causes the evaluation of all environment variables in the value before substitution.
 
@@ -139,23 +139,23 @@ The first part of the `lib` option is the name of the library. The second part i
 
 For interface modules, **OMake** includes the option of specifying additional flags and link dependencies using a special directive which can be embedded within the source module. This has the form:
 
-        'OMAKE' [ flags ] [ 'LINK' lib { ',' lib } ]
+    'OMAKE' [ flags ] [ 'LINK' lib { ',' lib } ]
 
 The `OMAKE` directive is be included in a comment between the `MODULE` declaration, and the `IMPORT` list. To specify compiler flags, include an optional string after the `OMAKE` keyword. To specify link libraries, include the keyword `LINK` followed by a comma-separated list of strings. For Example:
 
-        MODULE Test;
-            (* OMAKE "-x" LINK "SDL" *)
-        IMPORT ...
+    MODULE Test;
+        (* OMAKE "-x" LINK "SDL" *)
+    IMPORT ...
 
 In this example, "-x" will be added to the compile flags for module `Test`. Any module importing `Test`, either directly or indirectly, will be linked with library "SDL" using the link option "-lSDL".
 
 In order to link particular libraries, it may be necessary to specify additional paths to header files (-I) or library files (-L). This is done via the `linkflag` option:
 
-        linkflag: Ofront -I{OFRONTLIB}
-        linkflag: Ofront -I{TARGETLIB}/Obj
-        linkflag: Ofront -L{TARGETLIB}
-        linkflag: SDL2 -I/usr/local/include/SDL2
-        linkflag: cairo -I/usr/local/include/cairo
+    linkflag: Ofront -I{OFRONTLIB}
+    linkflag: Ofront -I{TARGETLIB}/Obj
+    linkflag: Ofront -L{TARGETLIB}
+    linkflag: SDL2 -I/usr/local/include/SDL2
+    linkflag: cairo -I/usr/local/include/cairo
 
 The first part specifies the name of a library, as defined either through a `lib` directive, or via `OMAKE LINK`. The second part specifies the corresponding flags that should be used by the linker when including this library. Multiple flags can be specified by quoting a string of flags, or by repeating the `linkflag` directive.
 
@@ -163,18 +163,18 @@ These flags may vary between systems depending on the location of library files 
 
 Some libraries must always be linked regardless of imports, because they contain essential parts of the run-time system. Required link libraries can be declared using the `require` option:
 
-        require: Ofront
+    require: Ofront
 
 Some "header-only" libraries have all implementation code contained in C header files. Such libraries require `linkflags` but have no corresponding `-l` library. Header-only libraries can be declared like this:
 
-        linkflag: CK   -I/usr/local/include
-        linkflag: CK   NOLIB
+    linkflag: CK   -I/usr/local/include
+    linkflag: CK   NOLIB
 
 The `NOLIB` flag instructs the linker to omit the usual `-l` library, but all other `linkflag` values are output as usual.
 
 Once the set of required libraries has been determined (via the `lib`, `OMAKE` and `require`) the following link command is executed:
 
-        linkcmd { linkflags } [ objs ] -m main.c -o main { libs }
+    linkcmd { linkflags } [ objs ] -m main.c -o main { libs }
 
 Where:
 
