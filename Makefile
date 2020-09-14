@@ -3,8 +3,8 @@ OBJS=TestAll OMake OEF
 all: tools test
 
 tools: OMake
-	OMake OMake
-	OMake OEF
+	./OMake OMake
+	./OMake OEF
 
 clean:
 	rm -f *.c *.sym *.oh
@@ -17,11 +17,11 @@ test: TestAll
 	./TestAll
 
 TestAll: OMake
-	OMake TestAll
+	./OMake TestAll
 
 # boostrap OMake
 OMake: script/build-omake.sh
 	script/build-omake.sh
 
 bootstrap:
-	OMake -script OMake > script/build-omake.sh
+	./OMake -script OMake > script/build-omake.sh
