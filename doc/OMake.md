@@ -1,8 +1,8 @@
 # OMake - A build tool for Ofront+
 
-**OMake** is a tool for automating the process of building large Oberon-2 projects.
+**OMake** is a tool for automatically building large Oberon-2 projects.
 
-**OMake** uses only the dependency information already expressed in the Oberon-2 source, and requires no additional scripts in order to compile and link projects.
+**OMake** uses only the dependency information already expressed in the Oberon-2 source, and requires no extra scripts to compile and link projects.
 
 To build any Oberon-2 module:
 
@@ -10,11 +10,11 @@ To build any Oberon-2 module:
 OMake Module
 ```
 
-**OMake** locates the source code for `Module` (eg. `Module.ob2`) and parses the `IMPORT` statements to gather information about all the imported modules. If an imported module is part of a library, that library will be added as a link dependency. Otherwise, each imported module is recursively pre-built from each of its dependencies.
+**OMake** locates the source code for `Module` (eg. `Module.ob2`) and parses the `IMPORT` statements to identify all the imported modules. If an imported module is part of a library, that library is added as a link dependency. Otherwise, each imported module is recursively pre-built from each of its dependencies.
 
 **OMake** uses **OFront+** to compile each Oberon source module, producing a corresponding "C" language object file. Finally, it uses the C compiler to compile and link these object files into an executable.
 
-Various options are available to specify compiler options and link dependencies.
+Various options are available to define compiler options and link dependencies.
 
 ## Command-line Options
 
@@ -22,7 +22,7 @@ Basic usage is:
 
     OMake [ options ] { Module }
 
-to automatically locate and process the source for `Module`. Here `Module` is the module name, and the location and extension of the source file will be inferred from the project settings.
+to automatically locate and process the source for `Module`. Here `Module` is the module name, and the location and extension of the source file is inferred from the project settings.
 
 Alternatively:
 
@@ -30,15 +30,15 @@ Alternatively:
 
 to process a specific source file.
 
-`options` are one or more command-line or configuration options (see below). All modules included on the command-line will be built as "main" modules using the `-m` compiler option, and will be linked to an executable called `Module`. Oberon dialect will be selected based on the file extension, which can be configured as outlined below. Other options are:
+`options` are one or more command-line or configuration options (see below). All modules included on the command-line are built as "main" modules using the `-m` compiler option, and are linked to an executable called `Module`. Oberon dialect is selected based on the file extension, which can be configured as outlined below. Other options are:
 
 * `-read file`
 
-    Reads configuration information from the named file. By default, **OMake** will look for configuration in the file `omake.ini` in the current directory. This option allows alternative files to be specified, or for one file to include another file.
+    Reads configuration from the named file. By default, **OMake** looks for configuration in the file `omake.ini` in the current directory. This option allows alternative files to be specified, or for one file to include another file.
 
 * `-script`
 
-    By default **OMake** will call the compiler and linker to complete the build process. Specifying `-script` causes only the build commands to be output. Such scripts can be used to later build modules without the **OMake** command, for example to bootstrap **OMake** on a system for the first time.
+    By default **OMake** calls the compiler and linker to complete the build process. Specifying `-script` causes only the build commands to be output. Such scripts can be used to later build modules without the **OMake** command, for example to bootstrap **OMake** on a system for the first time.
 
 ## Configuration Options
 
@@ -51,9 +51,9 @@ On the command line, an option is specified with a hyphen in front of the option
     -link "gcc -g"
     -set TARGET macOS
 
-Note that arguments that include spaces are enclosed within quotes, as required by the shell.
+Arguments that include spaces are enclosed within quotes, as required by the shell.
 
-In configuration files, each option is specified on a separate line beginning with the option name followed by a colon. Any parameters to the option are separated by whitespace, and parameters that include space must be quoted. The following correspond to the above examples:
+In configuration files, each option is specified on a separate line beginning with the option name followed by a colon. Any parameters of the option are separated by whitespace, and parameters that include space must be quoted. The following correspond to the above examples:
 
     script:
     read: omake.ini
@@ -66,7 +66,7 @@ The basic compile command is defined by the `compile` option. Example:
 
     compile: "Ofront+ -88 -s -e"
     
-The compile command should only specify flags that are common to all modules in the project. Additional flags may be appended based on file type.
+The compile command should only define flags that are common to all modules in the project. Additional flags may be appended based on file type.
 
 Similarly, the link command is defined by the `link` option:
 
@@ -74,7 +74,7 @@ Similarly, the link command is defined by the `link` option:
 
 ### File types and paths
 
-The set of valid module extensions is defined using `extension` options. Each extension is associated with a set of compiler flags, which will be applied when compiling modules of that type. This is typically used to set the language model. **Ofront+** currently supports Oberon (`-1`), Oberon-2 (`-2`), Oberon-07 (`-7`), Component Pascal (`-C`), and an experimental dialect Oberon-3 (`-3`). The following associates different file extensions with each dialect:
+The set of valid module extensions is defined using `extension` options. Each extension defines a set of compiler flags, which are used when compiling modules of that type. This is used to set the language model. **Ofront+** supports Oberon (`-1`), Oberon-2 (`-2`), Oberon-07 (`-7`), Component Pascal (`-C`), and an experimental dialect Oberon-3 (`-3`). The following defines different file extensions for each dialect:
 
     extension: Mod "-2"
     extension: ob  "-1"
@@ -83,11 +83,11 @@ The set of valid module extensions is defined using `extension` options. Each ex
     extension: ob7 "-7"
     extension: cp  "-C"
 
-**OMake** needs to know where to find the source code for each imported module. This is specified with the `source` option, which defines a comma-separated list of directories. In order to locate a module, **OMake** searches each directory in turn, trying each valid extension until it finds a match.
+**OMake** needs to know where to find the source code for each imported module. This is specified with the `source` option, which defines a comma-separated list of directories. To locate a module, **OMake** searches each directory in turn, trying each valid extension until it finds a match.
 
     source: .,test,src/lib,src/aria,[OFRONTLIB]
 
-Certain built-in modules have no dependencies, and may sometimes have no associated source files. These can be excluded from module search using the `exclude` option:
+Certain built-in modules have no dependencies, and may sometimes have no source files. These can be excluded from module search using the `exclude` option:
 
     exclude: Platform,SYSTEM
 
@@ -102,7 +102,7 @@ Certain built-in modules have no dependencies, and may sometimes have no associa
     
 Each setting defines the name of a variable (eg. `OFRONT`) followed by its value (eg. `/usr/local/src/OfrontPlus`). This value can be substituted anywhere else in the configuration file by enclosing the variable name in curly braces (eg. `{OFRONT}`). This will be replaced by the value assigned to the original variable. For example, in the definition of `OFRONTLIB`, the value `{OFRONT}` is replaced by `/usr/local/src/OfrontPlus`, resulting in the value `/usr/local/src/OfrontPlus/Mod/Lib`.
 
-In order to avoid hard-coded paths, it is possible to use environment variables, which effectively defers evaluation of the value to the time that the compile and link commands are executed. For example, in the shell:
+Environment variables can be used to avoid hard-coded paths,  which defers evaluation of the value to the time that the compile and link commands are executed. For example, in the shell:
 
     export OFRONT=/usr/local/src/OfrontPlus
     export TARGET=macOS
@@ -112,7 +112,7 @@ Then in the configuration file, include:
     set: OFRONT $OFRONT
     set: TARGET $TARGET
 
-This has the same effect as the previous example, but allows the variables `OFRONT` and `TARGET` to be controlled by the user's environment, making the configuration file independent of system paths. Occasionally, we need to evaluate an absolute path which may contain such environment variables. For example, when specifying a source path to **OMake**. In this situation, we use square brackets instead of curly braces:
+This has the same effect as the previous example, but allows the variables `OFRONT` and `TARGET` to be controlled by the user's environment, making the configuration file independent of system paths. Occasionally, we need to evaluate an absolute path which may contain such environment variables. For example, when defining a source path to **OMake**. In this situation, we use square brackets instead of curly braces:
 
     {OFRONTLIB} = $OFRONT/Mod/Lib
     [OFRONTLIB] = /usr/local/src/OfrontPlus/Mod/Lib
@@ -131,17 +131,17 @@ There are two forms of library dependency:
 * Pre-built Oberon-2 libraries such as libOfront
 * Interface modules that require external C libraries
 
-For pre-built libraries we use the `lib` option to specify which modules are part of the library. This is done by associating a source directory (in the `source` path) with a link library:
+For pre-built libraries we use the `lib` option to define which modules are part of the library. This is done by associating a source directory (in the `source` path) with a link library:
 
       lib: Ofront [OFRONTLIB]
 
 The first part of the `lib` option is the name of the library. The second part is the path to the directory containing the library source. If any imported source modules are located within that path, the specified library will be added as a link dependency.
 
-For interface modules, **OMake** includes the option of specifying additional flags and link dependencies using a special directive which can be embedded within the source module. This has the form:
+For interface modules, **OMake** includes the option of defining additional flags and link dependencies using a special directive which can be embedded within the source module. This has the form:
 
     'OMAKE' [ flags ] [ 'LINK' lib { ',' lib } ]
 
-The `OMAKE` directive is be included in a comment between the `MODULE` declaration, and the `IMPORT` list. To specify compiler flags, include an optional string after the `OMAKE` keyword. To specify link libraries, include the keyword `LINK` followed by a comma-separated list of strings. For Example:
+The `OMAKE` directive is be included in a comment between the `MODULE` declaration, and the `IMPORT` list. To define compiler flags, include an optional string after the `OMAKE` keyword. To define link libraries, include the keyword `LINK` followed by a comma-separated list of strings. For Example:
 
     MODULE Test;
         (* OMAKE "-x" LINK "SDL" *)
@@ -149,7 +149,7 @@ The `OMAKE` directive is be included in a comment between the `MODULE` declarati
 
 In this example, "-x" will be added to the compile flags for module `Test`. Any module importing `Test`, either directly or indirectly, will be linked with library "SDL" using the link option "-lSDL".
 
-In order to link particular libraries, it may be necessary to specify additional paths to header files (-I) or library files (-L). This is done via the `linkflag` option:
+To link particular libraries, we may need to define additional paths to header files (-I) or library files (-L). This is done via the `linkflag` option:
 
     linkflag: Ofront -I{OFRONTLIB}
     linkflag: Ofront -I{TARGETLIB}/Obj
@@ -157,9 +157,9 @@ In order to link particular libraries, it may be necessary to specify additional
     linkflag: SDL2 -I/usr/local/include/SDL2
     linkflag: cairo -I/usr/local/include/cairo
 
-The first part specifies the name of a library, as defined either through a `lib` directive, or via `OMAKE LINK`. The second part specifies the corresponding flags that should be used by the linker when including this library. Multiple flags can be specified by quoting a string of flags, or by repeating the `linkflag` directive.
+The first part defines the name of a library, as identified either through a `lib` directive, or via `OMAKE LINK`. The second part defines the corresponding flags that should be used by the linker when including this library. Multiple flags can be defined by quoting a string of flags, or by repeating the `linkflag` directive.
 
-These flags may vary between systems depending on the location of library files and headers. If a library is available as part of the operating system distribution, then additional flags may not be necessary. If instead the library has been installed by the user, it may be in a local directory. Of course, it is also possible to specify such dependencies in the `link` command, or via the environment (eg. like `CFLAGS`).
+These flags may vary between systems depending on the location of library files and headers. If a library is available as part of the operating system distribution, then additional flags may not be necessary. If instead the library has been installed by the user, it may be in a local directory. Of course, it is also possible to define such dependencies in the `link` command, or via the environment (eg. like `CFLAGS`).
 
 Some libraries must always be linked regardless of imports, because they contain essential parts of the run-time system. Required link libraries can be declared using the `require` option:
 
@@ -174,7 +174,7 @@ The `NOLIB` flag instructs the linker to omit the usual `-l` library, but all ot
 
 Once the set of required libraries has been determined (via the `lib`, `OMAKE` and `require`) the following link command is executed:
 
-    linkcmd { linkflags } [ objs ] -m main.c -o main { libs }
+    linkcmd { linkflags } [ objs ] -o Module { libs }
 
 Where:
 
@@ -194,7 +194,7 @@ Features to add in the future:
     2. A "manifest" file that specifies a list of module names
     3. A "root" module that imports all of the modules to be included
 * *Incremental build*. Currently **OMake** builds all imported modules that are not part of a pre-linked library. This is usually quite fast, but a module only really needs to be recompiled if it has changed since the last compilation, or if one of its imports have changed. One way to check this would be to compare the modification times of the module source and the symbol file.
-* *Filter compiler options*. Some modules may disable run-time checks for speed. Optionally we may want to suppress such flags, in order to build a "safer" version of the code.
+* *Filter compiler options*. Some modules may disable run-time checks for speed. Optionally we may want to suppress such flags, to build a "safer" version of the code.
 * *Better help message*. The default help message shows the default state for options, but at present this only works for simple "scalar" values. It should also output some of the more complex options which involved lists and/or associations (eg. "-set").
 * *Simplify handling of absolute paths*. As described, square brackets must be used to resolve absolute paths for `lib` and `source` directives. This resolution should probably be built in to these commands, so that either `{}` or `[]` forms can be used with the same effect.
 
