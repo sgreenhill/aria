@@ -1,4 +1,4 @@
-MODULE arOut;
+MODULE arErr;
 
 IMPORT
 	arText,
@@ -48,5 +48,5 @@ BEGIN
 END Bool;
 
 BEGIN
-	writer.Init(arFile.out.GetStream());
-END arOut.
+	writer.Init(arFile.err.GetStream());
+END arErr.
