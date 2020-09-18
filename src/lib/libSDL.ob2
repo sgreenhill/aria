@@ -36,6 +36,10 @@ CONST
     msgMouseWheel* = 403H;
 	msgKeyDown* = 300H;
 	msgKeyUp* = 301H;
+	msgTextInput* = 303H;
+
+CONST
+	TextInputEventTextSize = 32;
 
 TYPE
 	Uint8 = SYSTEM.INT8; 	(* should be unsigned *)
@@ -79,6 +83,17 @@ TYPE
 		y* : Sint32;
 	END;
 
+	MouseWheelEventPtr* = POINTER TO MouseWheelEvent;
+	MouseWheelEvent* = RECORD [notag]
+		type* : Uint32;
+		timestamp* : Uint32;
+		windowID* : Uint32;
+		which* : Uint32;
+		x* : Sint32;
+		y* : Sint32;
+		direction* : Uint32;
+	END;
+
 	Keysym* = RECORD [notag]
 		scancode* : Uint32;
 		sym* : Uint32;
@@ -94,6 +109,14 @@ TYPE
 		repeat* : Uint8;
 		padding1, padding2* : Uint8;
 		keysym* : Keysym;
+	END;
+
+	TextInputEventPtr* = POINTER TO TextInputEvent;
+	TextInputEvent* = RECORD [notag]
+		type* : Uint32;
+		timestamp* : Uint32;
+		windowID* : Uint32;
+		text* : ARRAY [notag] TextInputEventTextSize OF CHAR;
 	END;
 
 	Color = RECORD [notag]
@@ -158,6 +181,9 @@ PROCEDURE -DestroyTexture*(texture : Texture)
 
 PROCEDURE -GetWindowSize*(window : Window; VAR width, height : C.int)
 	"SDL_GetWindowSize((SDL_Window *)window, width, height)";
+
+PROCEDURE -GetWindowID*(window : Window) : C.int
+	"SDL_GetWindowID((SDL_Window *)window)";
 
 PROCEDURE -CreateRenderer*(window : Window; index, flags : C.int) : Renderer
 	"(libSDL_Renderer)SDL_CreateRenderer((SDL_Window *)window, (int)index, (int)flags)";
