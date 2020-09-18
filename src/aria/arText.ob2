@@ -139,7 +139,7 @@ END Set;
 
 PROCEDURE (VAR self : Writer) Ln*;
 BEGIN
-	self.String(Platform.newLine);
+	self.String(Platform.NewLine);
 END Ln;
 
 (* ----- Buffer ----- *)
