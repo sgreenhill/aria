@@ -113,7 +113,7 @@ BEGIN
 
 			buffer.Clear;
 			buffer.String(path^);
-			buffer.String("/");
+			buffer.String(Platform.PathDelimiter);
 			buffer.String(name);
 			buffer.String(".");
 			buffer.String(ext^);
