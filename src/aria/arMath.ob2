@@ -2,6 +2,8 @@
 
 MODULE arMath;
 
+	(* OMAKE LINK "m" *)
+
 IMPORT 
 	SYSTEM, 
 	C := arC;

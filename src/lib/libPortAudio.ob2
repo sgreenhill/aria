@@ -1,6 +1,6 @@
 MODULE libPortAudio;
 
-	(* OMAKE LINK "PortAudio" *)
+	(* OMAKE LINK "portaudio" *)
 
 	(* H2O version 2002, ported to VOC 2020 [SG] *)
 	(* DANGER! Should be regenerated *)

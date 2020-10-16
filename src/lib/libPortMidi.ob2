@@ -1,6 +1,6 @@
 MODULE libPortMidi;
 
-(* OMAKE LINK "PortMidi" *)
+(* OMAKE LINK "portmidi" *)
 
 IMPORT SYSTEM, C := arC;
 
