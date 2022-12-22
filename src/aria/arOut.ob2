@@ -22,6 +22,11 @@ BEGIN
 	writer.Hex(value);
 END Hex;
 
+PROCEDURE Set*(value : SET);
+BEGIN
+	writer.Set(value);
+END Set;
+
 PROCEDURE Char*(value : CHAR);
 BEGIN
 	writer.Char(value);
