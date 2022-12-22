@@ -4,7 +4,6 @@ IMPORT
 	Kernel,
 	Console,
 	Files,
-	Args, 
 	Platform,
 	Out := arOut,
 
@@ -31,6 +30,8 @@ CONST
 	openComment = 106;
 	closeComment = 107;
 	times = 108;
+	leftSquareBracket = 109;
+	rightSquareBracket = 110;
 
 	module = 200;
 	import = 201;
@@ -58,6 +59,7 @@ TYPE
 		name : String;
 		file : String;
 		inLibrary : BOOLEAN;
+		isForeign : BOOLEAN;
 		built : BOOLEAN;
 		flags : String;			(* flags specified in module *)
 		extFlags : String;		(* flags infered from extension *)
@@ -312,6 +314,8 @@ VAR
 				sym := openComment; Next;
 			END;
 		| ')': sym := rightParenthesis; Next;
+		| '[': sym := leftSquareBracket; Next;
+		| ']': sym := rightSquareBracket; Next;
 		| '*': sym := times; Next;
 			IF ch = ')' THEN
 				sym := closeComment; Next;
@@ -411,7 +415,19 @@ VAR
 	VAR original : Keyword;
 	BEGIN
 		Expect(module);
-		Symbol; Expect(identifier);
+		Symbol; 
+		IF sym = leftSquareBracket THEN
+			(* if module flags are specified, check for "foreign", ignoring other flags *)
+			Symbol;
+			Expect(identifier);
+			IF Strings.Equal(ident.value^, "foreign") THEN
+				m.isForeign := TRUE;
+			END;
+			Symbol;
+			Expect(rightSquareBracket);
+			Symbol;
+		END;
+		Expect(identifier);
 		m.name := CopyIdent();
 		Symbol; Expect(semicolon);
 
@@ -479,6 +495,7 @@ BEGIN
 	m.links := NIL;
 	m.imports := NIL;
 	m.inLibrary := FALSE;
+	m.isForeign := FALSE;
 	m.built := FALSE;
 
 	ParseModule(m);
@@ -536,8 +553,10 @@ BEGIN
 		RETURN TRUE;
 	END;
 
-	(* include this module in object files *)
-	SL.Add(objs, module.name);
+	(* include this module in object files, except for foreign modules *)
+	IF ~module.isForeign THEN
+		SL.Add(objs, module.name);
+	END;
 
 	(* first compile all imported modules *)
 	import := module.imports;
