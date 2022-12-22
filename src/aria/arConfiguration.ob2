@@ -57,8 +57,7 @@ MODULE arConfiguration;
 IMPORT 
 	Kernel,
 	Console,
-	Args, 
-	Platform,
+	Args := arArgs, 
 	Files, 
 
 	Size := arSize,
@@ -134,7 +133,7 @@ END CopyArgPtr;
 
 (* Copy C argument vector into an Oberon array *)
 
-PROCEDURE CopyArgVec(p : Platform.ArgVec) : SL.Array;
+PROCEDURE CopyArgVec(p : Args.ArgVec) : SL.Array;
 VAR
 	len, strLen : INTEGER;
 	i, j : INTEGER; 
